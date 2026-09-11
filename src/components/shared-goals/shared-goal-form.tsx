@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LoadingSpinner } from "@/components/ui/loading";
 import { createSharedGoal, updateSharedGoal } from "@/app/actions/shared-goals";
 
 const categories = [
@@ -167,7 +168,11 @@ export function SharedGoalForm({ mode, goal }: SharedGoalFormProps) {
 
           <div className="flex gap-3 pt-2">
             <Button type="submit" disabled={loading}>
-              {loading ? "Saving..." : mode === "create" ? "Create Goal" : "Save Changes"}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <LoadingSpinner size="xs" /> Saving…
+                </span>
+              ) : mode === "create" ? "Create Goal" : "Save Changes"}
             </Button>
             <Button type="button" variant="ghost" onClick={() => router.back()}>
               Cancel

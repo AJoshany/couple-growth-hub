@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { LoadingSpinner } from "@/components/ui/loading";
 import { upsertJournalEntry } from "@/app/actions/journal";
 
 interface JournalEntryFormProps {
@@ -242,7 +243,11 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
 
       <div className="flex gap-3">
         <Button type="submit" disabled={loading}>
-          {loading ? "Saving..." : entry ? "Update Entry" : "Save Entry"}
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <LoadingSpinner size="xs" /> Saving…
+            </span>
+          ) : entry ? "Update Entry" : "Save Entry"}
         </Button>
       </div>
     </form>

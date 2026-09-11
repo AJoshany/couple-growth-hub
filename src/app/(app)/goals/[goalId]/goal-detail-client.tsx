@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { GoalForm } from "@/components/goals/goal-form";
+import { LoadingSpinner } from "@/components/ui/loading";
 import {
   updateGoalProgress,
   addMilestone,
@@ -171,7 +172,13 @@ export function GoalDetailClient({ goal }: { goal: Goal }) {
               onClick={handleProgressUpdate}
               disabled={loading || progressValue === goal.progress}
             >
-              Update
+              {loading ? (
+                <span className="flex items-center gap-1.5">
+                  <LoadingSpinner size="xs" /> Updating…
+                </span>
+              ) : (
+                "Update"
+              )}
             </Button>
           </div>
           {totalMilestones > 0 && (

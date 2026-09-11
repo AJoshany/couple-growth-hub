@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LoadingSpinner } from "@/components/ui/loading";
 import { acceptInvitation } from "@/app/actions/couple";
 
 export function JoinForm() {
@@ -53,7 +54,13 @@ export function JoinForm() {
         className="w-full"
         disabled={loading}
       >
-        {loading ? "Joining..." : "Join Couple"}
+        {loading ? (
+          <span className="flex items-center gap-2">
+            <LoadingSpinner size="xs" /> Joining…
+          </span>
+        ) : (
+          "Join Couple"
+        )}
       </Button>
     </form>
   );

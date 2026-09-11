@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading";
 import { createGoal, updateGoal } from "@/app/actions/goals";
 
 const categories = [
@@ -204,9 +205,11 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
 
           <div className="flex gap-3 pt-2">
             <Button type="submit" disabled={loading}>
-              {loading
-                ? "Saving..."
-                : mode === "create"
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <LoadingSpinner size="xs" /> Saving…
+                </span>
+              ) : mode === "create"
                   ? "Create Goal"
                   : "Save Changes"}
             </Button>

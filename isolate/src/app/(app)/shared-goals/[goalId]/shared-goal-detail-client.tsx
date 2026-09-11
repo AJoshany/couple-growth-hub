@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { SharedGoalForm } from "@/components/shared-goals/shared-goal-form";
+import { LoadingSpinner } from "@/components/ui/loading";
 import {
   updateSharedGoalProgress,
   addSharedMilestone,
@@ -157,7 +158,13 @@ export function SharedGoalDetailClient({ goal }: { goal: Goal }) {
               className="flex-1"
             />
             <Button size="sm" onClick={handleProgressUpdate} disabled={loading || progressValue === goal.progress}>
-              Update
+              {loading ? (
+                <span className="flex items-center gap-1.5">
+                  <LoadingSpinner size="xs" /> Updating…
+                </span>
+              ) : (
+                "Update"
+              )}
             </Button>
           </div>
           {totalMilestones > 0 && (
