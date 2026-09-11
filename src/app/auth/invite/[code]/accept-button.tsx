@@ -35,10 +35,16 @@ export function AcceptInviteButton({ code }: { code: string }) {
 
   return (
     <div className="space-y-4">
-      <Button onClick={handleAccept} className="w-full" disabled={loading}>
-        {loading ? "Joining..." : "Accept Invitation"}
+      <Button
+        onClick={handleAccept}
+        className="bg-brand-gradient h-11 w-full border-0 text-base font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg hover:shadow-primary/20"
+        disabled={loading}
+      >
+        {loading ? "Joining..." : "Accept & Join"}
       </Button>
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && (
+        <p className="text-sm text-center text-destructive">{error}</p>
+      )}
     </div>
   );
 }
