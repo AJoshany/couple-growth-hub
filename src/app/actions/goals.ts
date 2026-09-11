@@ -7,9 +7,11 @@ import { goalSchema, milestoneSchema, updateProgressSchema } from "@/lib/validat
 
 async function requireAuth() {
   const session = await auth();
-  if (!session?.user?.id || !session.user.coupleId) {
+  if (!session?.user?.id) {
     throw new Error("Unauthorized");
   }
+  // Goals are personal, so they only require a signed-in user. The couple is
+  // optional and is only used to mirror activity onto the shared timeline.
   return { userId: session.user.id, coupleId: session.user.coupleId };
 }
 
@@ -42,16 +44,16 @@ export async function createGoal(formData: FormData) {
     },
   });
 
-  // Create timeline event
-  const couple = await prisma.user.findUnique({
+  // Mirror the activity onto the couple timeline when the user has a partner.
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { coupleId: true },
   });
 
-  if (couple?.coupleId) {
+  if (user?.coupleId) {
     await prisma.timelineEvent.create({
       data: {
-        coupleId: couple.coupleId,
+        coupleId: user.coupleId,
         userId,
         type: "GOAL_CREATED",
         title: `Created goal: ${goal.title}`,

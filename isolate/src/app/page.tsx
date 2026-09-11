@@ -2,6 +2,74 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import {
+  Target,
+  Trophy,
+  BookOpen,
+  Calendar,
+  BarChart3,
+  ShieldCheck,
+  Heart,
+  Sparkles,
+  ArrowRight,
+  Clock,
+} from "lucide-react";
+
+const features = [
+  {
+    icon: Target,
+    title: "Individual goals",
+    description:
+      "Set personal goals, track progress with milestones, and celebrate your growth.",
+  },
+  {
+    icon: Trophy,
+    title: "Shared goals",
+    description: "Create goals together and build your future as a team.",
+  },
+  {
+    icon: BookOpen,
+    title: "Daily journal",
+    description:
+      "Log your days, track mood and energy, and discover your patterns.",
+  },
+  {
+    icon: Calendar,
+    title: "Dates & memories",
+    description:
+      "Plan dates, record memories, and never miss your next meeting.",
+  },
+  {
+    icon: BarChart3,
+    title: "Weekly review",
+    description:
+      "See your week at a glance with charts and meaningful insights.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Private by default",
+    description:
+      "Sharing is your choice. Your data stays between you and your partner.",
+  },
+];
+
+const pillars = [
+  {
+    icon: Sparkles,
+    title: "Grow individually",
+    copy: "Personal goals, milestones and daily reflections that help each of you become your best self.",
+  },
+  {
+    icon: Heart,
+    title: "Build together",
+    copy: "Shared goals, dates and memories that turn two journeys into one story.",
+  },
+  {
+    icon: Clock,
+    title: "Remember everything",
+    copy: "A living timeline of the moments, wins and milestones that define your relationship.",
+  },
+];
 
 export default async function HomePage() {
   const session = await auth();
@@ -10,136 +78,137 @@ export default async function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-5 lg:px-12">
-        <div className="flex items-center gap-2.5">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-orange-400 text-white shadow-sm">
-            <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-lg">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-8">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="bg-brand-gradient flex size-9 items-center justify-center rounded-xl text-white shadow-sm">
+              <Heart className="size-4" fill="currentColor" />
+            </div>
+            <span className="text-base font-bold tracking-tight">
+              Couple Growth
+            </span>
+          </Link>
+          <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
+            <a href="#features" className="transition-colors hover:text-foreground">
+              Features
+            </a>
+            <a href="#how" className="transition-colors hover:text-foreground">
+              How it works
+            </a>
+          </nav>
+          <div className="flex items-center gap-2">
+            <Link href="/auth">
+              <Button variant="ghost" className="h-9 px-3.5">
+                Sign in
+              </Button>
+            </Link>
+            <Link href="/auth">
+              <Button className="h-9 px-4">Get started</Button>
+            </Link>
           </div>
-          <span className="text-lg font-bold tracking-tight">Couple Growth Hub</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/auth">
-            <Button variant="ghost" className="font-medium">Sign in</Button>
-          </Link>
-          <Link href="/auth">
-            <Button className="font-medium bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-600 hover:to-orange-500 text-white border-0 shadow-sm">
-              Get started
-            </Button>
-          </Link>
         </div>
       </header>
 
-      {/* Hero */}
-      <main className="flex flex-1 flex-col">
-        <section className="relative flex flex-1 flex-col items-center justify-center px-6 pt-12 pb-24 text-center">
-          {/* Background gradient */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-[500px] w-[800px] rounded-full bg-gradient-to-b from-rose-100/60 to-transparent blur-3xl" />
-          </div>
-
-          <div className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-white/80 px-4 py-1.5 text-sm font-medium text-rose-600 shadow-sm backdrop-blur">
-            <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
-            Built for couples who grow together
-          </div>
-
-          <h1 className="mt-8 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            Grow individually.
-            <br />
-            <span className="bg-gradient-to-r from-rose-500 to-orange-400 bg-clip-text text-transparent">
-              Build together.
+      <main className="flex-1">
+        {/* Hero */}
+        <section className="relative overflow-hidden">
+          <div className="brand-glow pointer-events-none absolute inset-x-0 top-0 h-[520px]" />
+          <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-6 pb-24 pt-20 text-center lg:px-8 lg:pt-28">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
+              <Heart className="size-3 text-primary" fill="currentColor" />
+              Built for two people growing together
             </span>
-          </h1>
 
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Track your personal goals, share your journey, and strengthen your
-            relationship — all in one private space built for two people who
-            are growing together.
-          </p>
+            <h1 className="mt-8 max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+              Grow individually.
+              <br />
+              <span className="text-brand-gradient">Build together.</span>
+            </h1>
 
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-            <Link href="/auth">
-              <Button size="lg" className="px-10 py-6 text-base font-semibold bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-600 hover:to-orange-500 text-white border-0 shadow-md">
-                Start your journey — it&apos;s free
-              </Button>
-            </Link>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              A private space to track your goals, share your days, plan your
+              dates and remember the moments that matter — for two people who are
+              intentional about their relationship.
+            </p>
+
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+              <Link href="/auth">
+                <Button className="h-11 gap-2 px-7 text-base">
+                  Start your journey
+                  <ArrowRight className="size-4" />
+                </Button>
+              </Link>
+              <a href="#how">
+                <Button variant="outline" className="h-11 px-7 text-base">
+                  See how it works
+                </Button>
+              </a>
+            </div>
+
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
+              {["Free to use", "Private & secure", "No ads, ever"].map((item) => (
+                <span key={item} className="flex items-center gap-2">
+                  <ShieldCheck className="size-4 text-primary" />
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
+        </section>
 
-          {/* Social proof */}
-          <div className="mt-12 flex items-center gap-6 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <svg className="size-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-              Free to use
+        {/* Pillars */}
+        <section id="how" className="border-t border-border/60 bg-card/40">
+          <div className="mx-auto w-full max-w-6xl px-6 py-20 lg:px-8">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl font-bold tracking-tight">
+                One space for your whole relationship
+              </h2>
+              <p className="mt-3 text-lg text-muted-foreground">
+                Individual growth and shared life, side by side.
+              </p>
             </div>
-            <div className="flex items-center gap-1.5">
-              <svg className="size-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-              Private & secure
-            </div>
-            <div className="flex items-center gap-1.5">
-              <svg className="size-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-              No ads, ever
+            <div className="mt-12 grid gap-6 md:grid-cols-3">
+              {pillars.map((pillar) => (
+                <div
+                  key={pillar.title}
+                  className="rounded-2xl border bg-card p-7 shadow-sm"
+                >
+                  <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <pillar.icon className="size-5" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-semibold">{pillar.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {pillar.copy}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* Features */}
-        <section className="border-t bg-white/50 px-6 py-24">
-          <div className="mx-auto max-w-5xl">
+        <section id="features" className="border-t border-border/60">
+          <div className="mx-auto w-full max-w-6xl px-6 py-20 lg:px-8">
             <div className="text-center">
-              <h2 className="text-3xl font-bold tracking-tight">Everything you need to grow together</h2>
-              <p className="mt-3 text-lg text-muted-foreground">
-                A complete toolkit for building a stronger, more intentional relationship.
+              <h2 className="text-3xl font-bold tracking-tight">
+                Everything you need to grow together
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-lg text-muted-foreground">
+                A complete toolkit for building a stronger, more intentional
+                relationship.
               </p>
             </div>
 
-            <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  icon: "🎯",
-                  title: "Individual Goals",
-                  description:
-                    "Set personal goals, track progress with milestones, and celebrate your growth.",
-                },
-                {
-                  icon: "🤝",
-                  title: "Shared Goals",
-                  description:
-                    "Create goals together and build your future as a team.",
-                },
-                {
-                  icon: "📝",
-                  title: "Daily Journal",
-                  description:
-                    "Log your days, track mood and energy, and discover your patterns.",
-                },
-                {
-                  icon: "💕",
-                  title: "Date Planning",
-                  description:
-                    "Plan dates, record memories, and never miss your next meeting.",
-                },
-                {
-                  icon: "📊",
-                  title: "Weekly Review",
-                  description:
-                    "See your week at a glance with charts and meaningful insights.",
-                },
-                {
-                  icon: "🔒",
-                  title: "Private & Secure",
-                  description:
-                    "Your data stays between you and your partner. Always.",
-                },
-              ].map((feature) => (
+            <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="group rounded-2xl border bg-white p-7 transition-all hover:shadow-lg hover:shadow-rose-100/50"
+                  className="group rounded-2xl border bg-card p-7 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5"
                 >
-                  <div className="text-3xl">{feature.icon}</div>
-                  <h3 className="mt-4 text-lg font-semibold">{feature.title}</h3>
+                  <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <feature.icon className="size-5" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-semibold">{feature.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     {feature.description}
                   </p>
@@ -150,25 +219,38 @@ export default async function HomePage() {
         </section>
 
         {/* CTA */}
-        <section className="px-6 py-24 text-center">
-          <div className="mx-auto max-w-lg">
-            <h2 className="text-3xl font-bold tracking-tight">Ready to grow together?</h2>
-            <p className="mt-3 text-lg text-muted-foreground">
-              Start your journey today. It&apos;s free, private, and built for couples
-              who want to be intentional about their relationship.
+        <section className="px-6 pb-24 lg:px-8">
+          <div className="bg-brand-gradient mx-auto max-w-5xl rounded-3xl px-6 py-16 text-center text-white shadow-lg sm:px-16">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Ready to grow together?
+            </h2>
+            <p className="mx-auto mt-4 max-w-lg text-base text-white/90 sm:text-lg">
+              Start your journey today. It&apos;s free, private, and made for
+              couples who want to be intentional about their relationship.
             </p>
             <Link href="/auth" className="mt-8 inline-block">
-              <Button size="lg" className="px-10 py-6 text-base font-semibold bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-600 hover:to-orange-500 text-white border-0 shadow-md">
+              <Button
+                size="lg"
+                className="h-11 gap-2 border-0 bg-white px-7 text-base text-primary hover:bg-white/90"
+              >
                 Get started — it&apos;s free
+                <ArrowRight className="size-4" />
               </Button>
             </Link>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t px-6 py-8 text-center text-sm text-muted-foreground">
-        <p>Built with care for couples who grow together.</p>
+      <footer className="border-t border-border/60">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground sm:flex-row lg:px-8">
+          <div className="flex items-center gap-2">
+            <div className="bg-brand-gradient flex size-6 items-center justify-center rounded-lg text-white">
+              <Heart className="size-3" fill="currentColor" />
+            </div>
+            Couple Growth
+          </div>
+          <p>Built with care for couples who grow together.</p>
+        </div>
       </footer>
     </div>
   );

@@ -82,7 +82,7 @@ export function WeeklyReviewClient() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">Weekly Review</h1>
           <p className="text-muted-foreground">Reflect on your week together</p>
@@ -91,7 +91,9 @@ export function WeeklyReviewClient() {
           <Button variant="outline" size="icon" onClick={() => setWeekOffset(weekOffset - 1)}>
             <ChevronLeft className="size-4" />
           </Button>
-          <span className="min-w-[140px] text-center text-sm font-medium">{weekLabel}</span>
+          <span className="flex-1 text-center text-sm font-medium sm:min-w-[140px] sm:flex-none">
+            {weekLabel}
+          </span>
           <Button
             variant="outline"
             size="icon"

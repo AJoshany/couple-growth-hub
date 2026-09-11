@@ -41,17 +41,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        // Fetch couple info only on sign-in
-        const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
-          select: { coupleId: true, coupleRole: true },
-        });
-        token.coupleId = dbUser?.coupleId ?? null;
-        token.coupleRole = dbUser?.coupleRole ?? null;
+    async jwt({ token, user, trigger }) {
+      const userId = user?.id ?? (token.id as string | undefined);
+
+      if (userId) {
+        token.id = userId;
+
+        // Keep couple membership fresh. It is set on sign-in, but a user can
+        // create or join a couple afterwards, which would otherwise leave a
+        // stale `coupleId: null` in the token until they sign out and back in.
+        // Refresh on sign-in, on explicit session updates, and whenever the
+        // token still has no couple.
+        const needsCoupleRefresh =
+          Boolean(user) || trigger === "update" || token.coupleId == null;
+
+        if (needsCoupleRefresh) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { coupleId: true, coupleRole: true },
+          });
+          token.coupleId = dbUser?.coupleId ?? null;
+          token.coupleRole = dbUser?.coupleRole ?? null;
+        }
       }
+
       return token;
     },
     async session({ session, token }) {

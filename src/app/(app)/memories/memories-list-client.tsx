@@ -30,14 +30,14 @@ export function MemoriesListClient({ memories }: { memories: Memory[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">Memories</h1>
           <p className="text-muted-foreground">
             Cherished moments from your journey together
           </p>
         </div>
-        <Link href="/memories/new">
+        <Link href="/memories/new" className="shrink-0 self-start sm:self-auto">
           <Button>
             <Plus className="size-4" />
             Add Memory
