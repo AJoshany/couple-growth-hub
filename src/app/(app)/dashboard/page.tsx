@@ -278,263 +278,258 @@ export default async function DashboardPage() {
       </section>
 
       {/* Main grid */}
-      <section className="grid gap-6 lg:grid-cols-3">
-        <div className="flex flex-col gap-6 lg:col-span-2">
-          {/* My goals */}
-          <Card className="flex-1 p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h3 className="text-sm font-semibold">Your goals</h3>
-                <p className="text-xs text-muted-foreground">
-                  Keep your momentum going
-                </p>
-              </div>
-              <Link
-                href="/goals"
-                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-              >
-                View all <ArrowRight className="size-3" />
-              </Link>
-            </div>
-            {myGoals.length === 0 ? (
-              <EmptyRow
-                icon={<Target className="size-5" />}
-                text="No goals yet — set your first one."
-                href="/goals/new"
-                cta="Create a goal"
-              />
-            ) : (
-              <ul className="mt-4 space-y-4">
-                {myGoals.map((goal) => (
-                  <li key={goal.id}>
-                    <Link href={`/goals/${goal.id}`} className="group block">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="truncate text-sm font-medium group-hover:text-primary">
-                          {goal.title}
-                        </span>
-                        <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                          {goal.progress}%
-                        </span>
-                      </div>
-                      <div className="mt-2">
-                        <ProgressBar value={goal.progress} />
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
-
-          {/* Shared goals */}
-          <Card className="flex-1 p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <h3 className="text-sm font-semibold">Shared goals</h3>
-                <p className="text-xs text-muted-foreground">
-                  What you&apos;re building together
-                </p>
-              </div>
-              <Link
-                href="/shared-goals"
-                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-              >
-                View all <ArrowRight className="size-3" />
-              </Link>
-            </div>
-            {sharedGoals.length === 0 ? (
-              <EmptyRow
-                icon={<Trophy className="size-5" />}
-                text="No shared goals yet — dream one up together."
-                href="/shared-goals/new"
-                cta="Add a shared goal"
-              />
-            ) : (
-              <ul className="mt-4 space-y-4">
-                {sharedGoals.map((goal) => (
-                  <li key={goal.id}>
-                    <Link href={`/shared-goals/${goal.id}`} className="group block">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="truncate text-sm font-medium group-hover:text-primary">
-                          {goal.title}
-                        </span>
-                        <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                          {goal.progress}%
-                        </span>
-                      </div>
-                      <div className="mt-2">
-                        <ProgressBar value={goal.progress} />
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
-
-          {/* Recent activity */}
-          <Card className="flex-1 p-5 sm:p-6">
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="text-sm font-semibold">Recent activity</h3>
-              <Link
-                href="/timeline"
-                className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
-              >
-                Timeline <ArrowRight className="size-3" />
-              </Link>
-            </div>
-            {recentEvents.length === 0 ? (
-              <p className="mt-4 text-sm text-muted-foreground">
-                Your story is just beginning. Activity will show up here.
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* My goals */}
+        <Card className="p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold">Your goals</h3>
+              <p className="text-xs text-muted-foreground">
+                Keep your momentum going
               </p>
-            ) : (
-              <ul className="mt-4 space-y-3">
-                {recentEvents.map((event) => (
-                  <li key={event.id} className="flex items-start gap-3">
-                    <span
-                      className={`mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full ${
-                        TIMELINE_STYLES[event.type] ?? "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <Clock className="size-3.5" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{event.title}</p>
-                      {event.detail && (
-                        <p className="truncate text-xs text-muted-foreground">
-                          {event.detail}
-                        </p>
-                      )}
-                    </div>
-                    <span className="shrink-0 text-xs text-muted-foreground">
-                      {formatDate(event.date, { month: "short", day: "numeric" })}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Card>
-        </div>
-
-        {/* Right column */}
-        <div className="flex flex-col gap-6">
-          {/* Today's check-in */}
-          <Card className="flex-1 p-5 sm:p-6">
-            <h3 className="text-sm font-semibold">Today</h3>
-            {todayJournal ? (
-              <div className="mt-4 space-y-4">
-                <Meter label="Mood" value={todayJournal.mood} words={MOOD} />
-                <Meter label="Energy" value={todayJournal.energy} words={ENERGY} />
-                <Meter
-                  label="Productivity"
-                  value={todayJournal.productivity}
-                  words={PRODUCTIVITY}
-                />
-              </div>
-            ) : (
-              <p className="mt-2 text-sm text-muted-foreground">
-                You haven&apos;t checked in today.
-              </p>
-            )}
-
-            {todayLog && todayLog.activities.length > 0 && (
-              <div className="mt-5 border-t pt-4">
-                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Activities
-                </p>
-                <ul className="mt-3 space-y-2">
-                  {todayLog.activities.map((activity) => (
-                    <li key={activity.id} className="flex items-start gap-2 text-sm">
-                      {activity.isCompleted ? (
-                        <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500" />
-                      ) : (
-                        <Circle className="mt-0.5 size-4 shrink-0 text-muted-foreground/60" />
-                      )}
-                      <span
-                        className={
-                          activity.isCompleted
-                            ? "text-muted-foreground line-through"
-                            : ""
-                        }
-                      >
-                        {activity.title}
+            </div>
+            <Link
+              href="/goals"
+              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              View all <ArrowRight className="size-3" />
+            </Link>
+          </div>
+          {myGoals.length === 0 ? (
+            <EmptyRow
+              icon={<Target className="size-5" />}
+              text="No goals yet — set your first one."
+              href="/goals/new"
+              cta="Create a goal"
+            />
+          ) : (
+            <ul className="mt-4 space-y-4">
+              {myGoals.map((goal) => (
+                <li key={goal.id}>
+                  <Link href={`/goals/${goal.id}`} className="group block">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="truncate text-sm font-medium group-hover:text-primary">
+                        {goal.title}
                       </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                      <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                        {goal.progress}%
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <ProgressBar value={goal.progress} />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
 
-            <Link href="/journal" className="mt-5 block">
-              <Button variant="outline" className="h-9 w-full">
-                {todayJournal ? "Open today's entry" : "Check in now"}
-              </Button>
-            </Link>
-          </Card>
-
-          {/* Missing each other */}
-          <Card className="flex-1 p-5 sm:p-6">
-            <div className="flex items-center gap-2">
-              <Heart className="size-4 text-primary" fill="currentColor" />
-              <h3 className="text-sm font-semibold">Missing each other</h3>
+        {/* Shared goals */}
+        <Card className="p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold">Shared goals</h3>
+              <p className="text-xs text-muted-foreground">
+                What you&apos;re building together
+              </p>
             </div>
-            <p className="mt-2 text-xs text-muted-foreground">
-              A gentle check-in, not a scoreboard.
+            <Link
+              href="/shared-goals"
+              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              View all <ArrowRight className="size-3" />
+            </Link>
+          </div>
+          {sharedGoals.length === 0 ? (
+            <EmptyRow
+              icon={<Trophy className="size-5" />}
+              text="No shared goals yet — dream one up together."
+              href="/shared-goals/new"
+              cta="Add a shared goal"
+            />
+          ) : (
+            <ul className="mt-4 space-y-4">
+              {sharedGoals.map((goal) => (
+                <li key={goal.id}>
+                  <Link href={`/shared-goals/${goal.id}`} className="group block">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="truncate text-sm font-medium group-hover:text-primary">
+                        {goal.title}
+                      </span>
+                      <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                        {goal.progress}%
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <ProgressBar value={goal.progress} />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        {/* Recent activity */}
+        <Card className="p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="text-sm font-semibold">Recent activity</h3>
+            <Link
+              href="/timeline"
+              className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            >
+              Timeline <ArrowRight className="size-3" />
+            </Link>
+          </div>
+          {recentEvents.length === 0 ? (
+            <p className="mt-4 text-sm text-muted-foreground">
+              Your story is just beginning. Activity will show up here.
             </p>
-            <div className="mt-4 space-y-4">
-              <MissingRow label="You" value={myMissing} />
-              <MissingRow label={partnerName ?? "Partner"} value={partnerMissing} />
-            </div>
-            <Link href="/relationship" className="mt-5 block">
-              <Button variant="outline" className="h-9 w-full">
-                Update how you feel
-              </Button>
-            </Link>
-          </Card>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {recentEvents.map((event) => (
+                <li key={event.id} className="flex items-start gap-3">
+                  <span
+                    className={`mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full ${
+                      TIMELINE_STYLES[event.type] ?? "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    <Clock className="size-3.5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{event.title}</p>
+                    {event.detail && (
+                      <p className="truncate text-xs text-muted-foreground">
+                        {event.detail}
+                      </p>
+                    )}
+                  </div>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {formatDate(event.date, { month: "short", day: "numeric" })}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
 
-          {/* Next date */}
-          <Card className="flex-1 p-5 sm:p-6">
-            <div className="flex items-center gap-2">
-              <Calendar className="size-4 text-primary" />
-              <h3 className="text-sm font-semibold">
-                {nextDate ? "Next date" : "No date planned"}
-              </h3>
+        {/* Today's check-in */}
+        <Card className="p-4 sm:p-5 lg:p-6">
+          <h3 className="text-sm font-semibold">Today</h3>
+          {todayJournal ? (
+            <div className="mt-4 space-y-4">
+              <Meter label="Mood" value={todayJournal.mood} words={MOOD} />
+              <Meter label="Energy" value={todayJournal.energy} words={ENERGY} />
+              <Meter
+                label="Productivity"
+                value={todayJournal.productivity}
+                words={PRODUCTIVITY}
+              />
             </div>
-            {nextDate ? (
-              <>
-                <p className="mt-3 text-base font-medium">{nextDate.title}</p>
-                <p className="text-sm text-muted-foreground">
-                  {formatDate(nextDate.date, {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
+          ) : (
+            <p className="mt-2 text-sm text-muted-foreground">
+              You haven&apos;t checked in today.
+            </p>
+          )}
+
+          {todayLog && todayLog.activities.length > 0 && (
+            <div className="mt-5 border-t pt-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Activities
+              </p>
+              <ul className="mt-3 space-y-2">
+                {todayLog.activities.map((activity) => (
+                  <li key={activity.id} className="flex items-start gap-2 text-sm">
+                    {activity.isCompleted ? (
+                      <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-emerald-500" />
+                    ) : (
+                      <Circle className="mt-0.5 size-4 shrink-0 text-muted-foreground/60" />
+                    )}
+                    <span
+                      className={
+                        activity.isCompleted
+                          ? "text-muted-foreground line-through"
+                          : ""
+                      }
+                    >
+                      {activity.title}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <Link href="/journal" className="mt-5 block">
+            <Button variant="outline" className="h-9 w-full">
+              {todayJournal ? "Open today's entry" : "Check in now"}
+            </Button>
+          </Link>
+        </Card>
+
+        {/* Missing each other */}
+        <Card className="p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center gap-2">
+            <Heart className="size-4 text-primary" fill="currentColor" />
+            <h3 className="text-sm font-semibold">Missing each other</h3>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            A gentle check-in, not a scoreboard.
+          </p>
+          <div className="mt-4 space-y-4">
+            <MissingRow label="You" value={myMissing} />
+            <MissingRow label={partnerName ?? "Partner"} value={partnerMissing} />
+          </div>
+          <Link href="/relationship" className="mt-5 block">
+            <Button variant="outline" className="h-9 w-full">
+              Update how you feel
+            </Button>
+          </Link>
+        </Card>
+
+        {/* Next date */}
+        <Card className="p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center gap-2">
+            <Calendar className="size-4 text-primary" />
+            <h3 className="text-sm font-semibold">
+              {nextDate ? "Next date" : "No date planned"}
+            </h3>
+          </div>
+          {nextDate ? (
+            <>
+              <p className="mt-3 text-base font-medium">{nextDate.title}</p>
+              <p className="text-sm text-muted-foreground">
+                {formatDate(nextDate.date, {
+                  weekday: "short",
+                  month: "short",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </p>
+              {nextDate.location && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {nextDate.location}
                 </p>
-                {nextDate.location && (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {nextDate.location}
-                  </p>
-                )}
-                <Link href={`/dates/${nextDate.id}`} className="mt-4 block">
-                  <Button variant="outline" className="h-9 w-full">
-                    View details
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <p className="mt-3 text-sm text-muted-foreground">
-                  Plan something to look forward to.
-                </p>
-                <Link href="/dates/new" className="mt-4 block">
-                  <Button className="h-9 w-full">Plan a date</Button>
-                </Link>
-              </>
-            )}
-          </Card>
-        </div>
+              )}
+              <Link href={`/dates/${nextDate.id}`} className="mt-4 block">
+                <Button variant="outline" className="h-9 w-full">
+                  View details
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Plan something to look forward to.
+              </p>
+              <Link href="/dates/new" className="mt-4 block">
+                <Button className="h-9 w-full">Plan a date</Button>
+              </Link>
+            </>
+          )}
+        </Card>
       </section>
 
       {/* Quick actions */}
