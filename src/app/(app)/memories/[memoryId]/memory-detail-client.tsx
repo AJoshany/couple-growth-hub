@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { MemoryForm } from "@/components/memories/memory-form";
 import { deleteMemory } from "@/app/actions/memories";
 import { ArrowLeft, Trash2, MapPin, Calendar, User, Edit } from "lucide-react";
@@ -28,7 +30,12 @@ export function MemoryDetailClient({ memory }: { memory: Memory }) {
 
   async function handleDelete() {
     if (!confirm("Are you sure you want to delete this memory?")) return;
-    await deleteMemory(memory.id);
+    try {
+      await deleteMemory(memory.id);
+      toast.success("Memory deleted.");
+    } catch {
+      toast.error("Failed to delete memory.");
+    }
   }
 
   if (editing) {

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { DateEventForm } from "@/components/dates/date-event-form";
 import { completeDateEvent, deleteDateEvent } from "@/app/actions/dates";
 import { ArrowLeft, Check, Trash2, MapPin, Calendar, Clock, Edit } from "lucide-react";
@@ -43,14 +45,27 @@ export function DateDetailClient({ event }: { event: DateEvent }) {
 
   async function handleComplete() {
     setLoading(true);
-    await completeDateEvent(event.id);
-    setLoading(false);
-    router.refresh();
+    try {
+      await completeDateEvent(event.id);
+      toast.success("Date completed!", {
+        description: "Great job on your date together!",
+      });
+      router.refresh();
+    } catch {
+      toast.error("Failed to mark date as complete.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleDelete() {
     if (!confirm("Are you sure you want to delete this date?")) return;
-    await deleteDateEvent(event.id);
+    try {
+      await deleteDateEvent(event.id);
+      toast.success("Date deleted.");
+    } catch {
+      toast.error("Failed to delete date.");
+    }
   }
 
   if (editing) {
@@ -94,7 +109,13 @@ export function DateDetailClient({ event }: { event: DateEvent }) {
         <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
           {!event.isCompleted && (
             <Button onClick={handleComplete} disabled={loading}>
-              <Check className="size-4" /> Mark Done
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <LoadingSpinner size="xs" /> Completing…
+                </span>
+              ) : (
+                <><Check className="size-4" /> Mark Done</>
+              )}
             </Button>
           )}
           <Button variant="outline" onClick={() => setEditing(true)}>

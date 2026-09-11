@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { getRelationshipInfo, updateRelationshipInfo } from "@/app/actions/relationship";
 import { logMissingEntry, getMissingStatus } from "@/app/actions/missing";
 import { Heart, Calendar, MapPin, Clock, Users, Sparkles, Edit } from "lucide-react";
@@ -42,23 +44,39 @@ export function RelationshipPageClient() {
 
   async function handleLogMissing() {
     setSaving(true);
-    await logMissingEntry(myMissingValue);
-    const m = await getMissingStatus();
-    setMissing(m);
-    setSaving(false);
+    try {
+      await logMissingEntry(myMissingValue);
+      const m = await getMissingStatus();
+      setMissing(m);
+      toast.success("Missing value updated!", {
+        description: `You're missing them at ${myMissingValue}%.`,
+      });
+    } catch {
+      toast.error("Failed to update missing value.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleSaveInfo() {
     setSaving(true);
-    await updateRelationshipInfo({
-      name: coupleName || undefined,
-      startDate: startDate || undefined,
-    });
-    const i = await getRelationshipInfo();
-    setInfo(i);
-    setEditing(false);
-    setSaving(false);
-    router.refresh();
+    try {
+      await updateRelationshipInfo({
+        name: coupleName || undefined,
+        startDate: startDate || undefined,
+      });
+      const i = await getRelationshipInfo();
+      setInfo(i);
+      setEditing(false);
+      toast.success("Relationship info saved!", {
+        description: "Your changes have been updated.",
+      });
+      router.refresh();
+    } catch {
+      toast.error("Failed to save relationship info.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (loading) {
@@ -127,7 +145,13 @@ export function RelationshipPageClient() {
             </div>
             <div className="flex gap-2">
               <Button size="sm" onClick={handleSaveInfo} disabled={saving}>
-                Save
+                {saving ? (
+                  <span className="flex items-center gap-2">
+                    <LoadingSpinner size="xs" /> Saving…
+                  </span>
+                ) : (
+                  "Save"
+                )}
               </Button>
               <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>
                 Cancel
@@ -248,7 +272,13 @@ export function RelationshipPageClient() {
                 <span>So much</span>
               </div>
               <Button size="sm" onClick={handleLogMissing} disabled={saving} className="w-full">
-                Update
+                {saving ? (
+                  <span className="flex items-center gap-2">
+                    <LoadingSpinner size="xs" /> Updating…
+                  </span>
+                ) : (
+                  "Update"
+                )}
               </Button>
             </div>
 
