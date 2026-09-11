@@ -14,7 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { createGoal, updateGoal } from "@/app/actions/goals";
+import { GoalTemplate } from "@/lib/goal-templates";
 
 const categories = [
   { value: "CAREER", label: "Career" },
@@ -46,9 +49,10 @@ interface GoalFormProps {
     startDate: Date | null;
     targetDate: Date | null;
   };
+  template?: GoalTemplate;
 }
 
-export function GoalForm({ mode, goal }: GoalFormProps) {
+export function GoalForm({ mode, goal, template }: GoalFormProps) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -62,12 +66,23 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
     try {
       if (mode === "create") {
         const result = await createGoal(formData);
-        if (result?.error) applyError(result.error);
+        if (result?.error) {
+          applyError(result.error);
+        } else {
+          toast.success("Goal created!", {
+            description: "Your new goal has been added.",
+          });
+          router.push("/goals");
+          router.refresh();
+        }
       } else if (goal) {
         const result = await updateGoal(goal.id, formData);
         if (result?.error) {
           applyError(result.error);
         } else {
+          toast.success("Goal updated!", {
+            description: "Your changes have been saved.",
+          });
           router.push(`/goals/${goal.id}`);
           router.refresh();
         }
@@ -78,6 +93,7 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
         return;
       }
       setFormError("Something went wrong saving your goal. Please try again.");
+        toast.error("Failed to save goal");
     } finally {
       setLoading(false);
     }
@@ -103,13 +119,20 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
               {formError}
             </p>
           )}
+          {template && (
+            <div className="rounded-lg bg-primary/5 p-3">
+              <p className="text-sm font-medium">Using template: {template.icon} {template.title}</p>
+              <p className="text-xs text-muted-foreground">{template.description}</p>
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
               name="title"
               placeholder="What do you want to achieve?"
-              defaultValue={goal?.title}
+              defaultValue={goal?.title || template?.title}
               required
             />
             {errors.title && (
@@ -123,7 +146,7 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
               id="description"
               name="description"
               placeholder="Why is this important to you?"
-              defaultValue={goal?.description ?? ""}
+              defaultValue={goal?.description ?? template?.description ?? ""}
               rows={3}
             />
           </div>
@@ -133,7 +156,7 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
               <Label>Category</Label>
               <Select
                 name="category"
-                defaultValue={goal?.category || "PERSONAL"}
+                defaultValue={goal?.category || template?.category || "PERSONAL"}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
@@ -204,9 +227,11 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
 
           <div className="flex gap-3 pt-2">
             <Button type="submit" disabled={loading}>
-              {loading
-                ? "Saving..."
-                : mode === "create"
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <LoadingSpinner size="xs" /> Saving…
+                </span>
+              ) : mode === "create"
                   ? "Create Goal"
                   : "Save Changes"}
             </Button>

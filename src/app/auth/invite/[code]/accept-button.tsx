@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading";
 import { acceptInvitation } from "@/app/actions/couple";
 
 export function AcceptInviteButton({ code }: { code: string }) {
@@ -40,7 +41,13 @@ export function AcceptInviteButton({ code }: { code: string }) {
         className="bg-brand-gradient h-11 w-full border-0 text-base font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg hover:shadow-primary/20"
         disabled={loading}
       >
-        {loading ? "Joining..." : "Accept & Join"}
+        {loading ? (
+          <span className="flex items-center gap-2">
+            <LoadingSpinner size="xs" /> Joining…
+          </span>
+        ) : (
+          "Accept & Join"
+        )}
       </Button>
       {error && (
         <p className="text-sm text-center text-destructive">{error}</p>

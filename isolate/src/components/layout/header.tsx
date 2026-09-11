@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Heart, LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 
@@ -45,7 +46,9 @@ export function Header({ user }: HeaderProps) {
         </div>
       </div>
 
-      <DropdownMenu>
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        <DropdownMenu>
         <DropdownMenuTrigger
           className="rounded-full outline-none ring-offset-background transition focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label="Open account menu"
@@ -81,7 +84,8 @@ export function Header({ user }: HeaderProps) {
             </button>
           </form>
         </DropdownMenuContent>
-      </DropdownMenu>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }

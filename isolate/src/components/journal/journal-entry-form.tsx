@@ -8,6 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { FileUpload } from "@/components/ui/file-upload";
+import { ReflectionPrompts } from "@/components/reflection-prompts";
+import { toast } from "sonner";
 import { upsertJournalEntry } from "@/app/actions/journal";
 
 interface JournalEntryFormProps {
@@ -22,6 +26,7 @@ interface JournalEntryFormProps {
     energy: number | null;
     productivity: number | null;
     visibility: string;
+    imageUrl?: string | null;
   } | null;
 }
 
@@ -79,6 +84,7 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
   const [energy, setEnergy] = useState(entry?.energy || 0);
   const [productivity, setProductivity] = useState(entry?.productivity || 0);
   const [visibility, setVisibility] = useState(entry?.visibility || "PARTNER_VISIBLE");
+  const [imageUrl, setImageUrl] = useState<string | null>(entry?.imageUrl || null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const router = useRouter();
@@ -98,6 +104,9 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
       if (result?.error) {
         setErrors(result.error as Record<string, string[]>);
       } else {
+        toast.success("Journal entry saved!", {
+          description: "Your reflection has been recorded.",
+        });
         router.push("/journal");
         router.refresh();
       }
@@ -107,6 +116,7 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
         return;
       }
       setErrors({ summary: ["An unexpected error occurred"] });
+        toast.error("Failed to save journal entry");
     } finally {
       setLoading(false);
     }
@@ -162,6 +172,22 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
             />
           </div>
 
+          {/* Reflection Prompt Suggestion */}
+          {!entry && (
+            <div className="rounded-lg bg-muted p-3">
+              <p className="text-xs text-muted-foreground mb-2">Need inspiration? Try this prompt:</p>
+              <ReflectionPrompts
+                onSelectPrompt={(prompt) => {
+                  const summaryField = document.getElementById("summary") as HTMLTextAreaElement;
+                  if (summaryField) {
+                    summaryField.value = prompt;
+                    summaryField.focus();
+                  }
+                }}
+              />
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="accomplishments">What I accomplished</Label>
             <Textarea
@@ -208,6 +234,19 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
         </CardContent>
       </Card>
 
+      {/* Photo */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Photo (optional)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FileUpload
+            value={imageUrl || undefined}
+            onChange={setImageUrl}
+          />
+        </CardContent>
+      </Card>
+
       {/* Visibility */}
       <Card>
         <CardContent className="pt-6">
@@ -242,7 +281,11 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
 
       <div className="flex gap-3">
         <Button type="submit" disabled={loading}>
-          {loading ? "Saving..." : entry ? "Update Entry" : "Save Entry"}
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <LoadingSpinner size="xs" /> Saving…
+            </span>
+          ) : entry ? "Update Entry" : "Save Entry"}
         </Button>
       </div>
     </form>

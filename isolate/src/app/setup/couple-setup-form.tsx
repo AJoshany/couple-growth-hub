@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LoadingSpinner } from "@/components/ui/loading";
 import { createCouple } from "@/app/actions/couple";
 
 export function CoupleSetupForm() {
@@ -47,7 +48,13 @@ export function CoupleSetupForm() {
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Creating..." : "Create Couple"}
+        {loading ? (
+          <span className="flex items-center gap-2">
+            <LoadingSpinner size="xs" /> Creating…
+          </span>
+        ) : (
+          "Create Couple"
+        )}
       </Button>
     </form>
   );

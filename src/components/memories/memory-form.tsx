@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { FileUpload } from "@/components/ui/file-upload";
+import { toast } from "sonner";
 import { createMemory, updateMemory } from "@/app/actions/memories";
 
 interface MemoryFormProps {
@@ -19,12 +22,14 @@ interface MemoryFormProps {
     location: string | null;
     date: Date;
     dateEventId: string | null;
+    imageUrl?: string | null;
   };
 }
 
 export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [imageUrl, setImageUrl] = useState<string | null>(memory?.imageUrl || null);
   const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
@@ -34,12 +39,23 @@ export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
     try {
       if (mode === "create") {
         const result = await createMemory(formData);
-        if (result?.error) setErrors(result.error as Record<string, string[]>);
+        if (result?.error) {
+          setErrors(result.error as Record<string, string[]>);
+        } else {
+          toast.success("Memory saved!", {
+            description: "This moment has been captured.",
+          });
+          router.push("/memories");
+          router.refresh();
+        }
       } else if (memory) {
         const result = await updateMemory(memory.id, formData);
         if (result?.error) {
           setErrors(result.error as Record<string, string[]>);
         } else {
+          toast.success("Memory updated!", {
+            description: "Your changes have been saved.",
+          });
           router.push(`/memories/${memory.id}`);
           router.refresh();
         }
@@ -50,6 +66,7 @@ export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
         return;
       }
       setErrors({ title: ["An unexpected error occurred"] });
+        toast.error("Failed to save memory");
     } finally {
       setLoading(false);
     }
@@ -132,11 +149,21 @@ export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label>Photo (optional)</Label>
+            <FileUpload
+              value={imageUrl || undefined}
+              onChange={setImageUrl}
+            />
+          </div>
+
           <div className="flex gap-3 pt-2">
             <Button type="submit" disabled={loading}>
-              {loading
-                ? "Saving..."
-                : mode === "create"
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <LoadingSpinner size="xs" /> Saving…
+                </span>
+              ) : mode === "create"
                   ? "Save Memory"
                   : "Save Changes"}
             </Button>

@@ -18,6 +18,7 @@ import {
   Circle,
   CheckCircle2,
 } from "lucide-react";
+import { RelationshipHealth } from "@/components/relationship-health";
 
 const MOOD = ["", "Rough", "Low", "Okay", "Good", "Great"];
 const ENERGY = ["", "Drained", "Tired", "Steady", "Energized", "Peak"];
@@ -79,6 +80,13 @@ export default async function DashboardPage() {
   const startOfTomorrow = new Date(startOfToday.getTime() + 86_400_000);
   const memberIds = couple.users.map((u) => u.id);
 
+  // Get data for health score
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
   const [
     myGoals,
     sharedGoals,
@@ -90,6 +98,10 @@ export default async function DashboardPage() {
     memories,
     recentEvents,
     completedMilestones,
+    journalEntriesThisWeek,
+    datesThisMonth,
+    sharedGoalsData,
+    loveNotesThisWeek,
   ] = await Promise.all([
     prisma.goal.findMany({
       where: { userId, status: { not: "CANCELLED" } },
@@ -149,6 +161,20 @@ export default async function DashboardPage() {
     prisma.goalMilestone.count({
       where: { goal: { userId }, isCompleted: true },
     }),
+    // Health score data
+    prisma.journalEntry.count({
+      where: { userId, date: { gte: startOfWeek } },
+    }),
+    prisma.dateEvent.count({
+      where: { coupleId, date: { gte: startOfMonth } },
+    }),
+    prisma.sharedGoal.findMany({
+      where: { coupleId, status: { not: "CANCELLED" } },
+      select: { progress: true },
+    }),
+    prisma.loveNote.count({
+      where: { coupleId, createdAt: { gte: startOfWeek } },
+    }),
   ]);
 
   const daysTogether = couple.startDate
@@ -178,6 +204,16 @@ export default async function DashboardPage() {
 
   const partnerName = partner?.name.split(" ")[0] ?? null;
   const activeGoals = myGoals.filter((g) => g.status !== "COMPLETED").length;
+
+  // Calculate health score data
+  const avgMood = todayJournal?.mood || 3;
+  const sharedGoalsProgress =
+    sharedGoalsData.length > 0
+      ? Math.round(
+          sharedGoalsData.reduce((sum, g) => sum + g.progress, 0) /
+            sharedGoalsData.length
+        )
+      : 0;
 
   return (
     <div className="space-y-8">
@@ -274,6 +310,17 @@ export default async function DashboardPage() {
           value={lastDate ? formatDate(lastDate.date, { month: "short", day: "numeric" }) : "—"}
           sub={lastDate?.title ?? "no dates yet"}
           href="/dates"
+        />
+      </section>
+
+      {/* Relationship Health */}
+      <section>
+        <RelationshipHealth
+          journalEntriesThisWeek={journalEntriesThisWeek}
+          datesThisMonth={datesThisMonth}
+          avgMood={avgMood}
+          sharedGoalsProgress={sharedGoalsProgress}
+          loveNotesThisWeek={loveNotesThisWeek}
         />
       </section>
 

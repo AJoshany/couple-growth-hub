@@ -18,6 +18,10 @@ import {
   Clock,
   Settings,
   LogOut,
+  MessageCircleHeart,
+  CheckCircle,
+  Award,
+  Library,
 } from "lucide-react";
 import {
   Sheet,
@@ -40,6 +44,7 @@ const moreSections = [
     label: "Overview",
     items: [
       { href: "/partner", label: "Partner Progress", icon: Users },
+      { href: "/achievements", label: "Achievements", icon: Award },
       { href: "/weekly", label: "Weekly Review", icon: BarChart3 },
     ],
   },
@@ -47,13 +52,16 @@ const moreSections = [
     label: "Growth",
     items: [
       { href: "/shared-goals", label: "Shared Goals", icon: Trophy },
-      { href: "/goals", label: "My Goals", icon: Target },
+      { href: "/habits", label: "Habits", icon: CheckCircle },
       { href: "/journal", label: "Journal", icon: BookOpen },
     ],
   },
   {
     label: "Together",
     items: [
+      { href: "/love-notes", label: "Love Notes", icon: MessageCircleHeart },
+      { href: "/reading", label: "Reading List", icon: Library },
+      { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/dates", label: "Dates", icon: Calendar },
       { href: "/memories", label: "Memories", icon: Sparkles },
       { href: "/timeline", label: "Timeline", icon: Clock },

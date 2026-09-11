@@ -5,7 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Heart, Mail, Lock, User, ArrowRight, Sparkles } from "lucide-react";
+import { Heart, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { LoadingSpinner } from "@/components/ui/loading";
 import { register } from "@/app/actions/auth";
 
 type Mode = "login" | "register";
@@ -183,7 +184,7 @@ export function AuthForm() {
         >
           {loading ? (
             <span className="flex items-center gap-2">
-              <Sparkles className="size-4 animate-spin" /> Please wait...
+              <LoadingSpinner size="sm" /> Please wait…
             </span>
           ) : (
             <span className="flex items-center gap-2">
