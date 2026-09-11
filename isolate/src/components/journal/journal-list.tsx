@@ -37,14 +37,14 @@ export function JournalList({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">Daily Journal</h1>
           <p className="text-muted-foreground">
             Reflect on your days and track your well-being
           </p>
         </div>
-        <Link href={`/journal/${today}`}>
+        <Link href={`/journal/${today}`} className="shrink-0 self-start sm:self-auto">
           <Button>
             <Plus className="size-4" />
             {todayEntry ? "Edit Today" : "Log Today"}
@@ -83,7 +83,7 @@ export function JournalList({
                     isToday ? "ring-2 ring-primary/20" : ""
                   }`}
                 >
-                  <CardContent className="flex items-center gap-4 p-4">
+                  <CardContent className="flex items-center gap-3 p-4 sm:gap-4">
                     <div className="flex size-12 shrink-0 flex-col items-center justify-center rounded-lg bg-muted text-center">
                       <span className="text-xs font-medium text-muted-foreground">
                         {dayName}
@@ -109,13 +109,13 @@ export function JournalList({
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex shrink-0 items-center gap-2 sm:gap-3">
                       {entry.mood && (
                         <span className="text-xl" title={`Mood: ${entry.mood}/5`}>
                           {moodEmojis[entry.mood]}
                         </span>
                       )}
-                      <div className="flex gap-1 text-xs text-muted-foreground">
+                      <div className="hidden gap-1 text-xs text-muted-foreground sm:flex">
                         {entry.energy && (
                           <span title={`Energy: ${entry.energy}/5`}>
                             ⚡{entry.energy}

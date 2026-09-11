@@ -51,20 +51,22 @@ interface GoalFormProps {
 export function GoalForm({ mode, goal }: GoalFormProps) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [formError, setFormError] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     setErrors({});
+    setFormError(null);
 
     try {
       if (mode === "create") {
         const result = await createGoal(formData);
-        if (result?.error) setErrors(result.error as Record<string, string[]>);
+        if (result?.error) applyError(result.error);
       } else if (goal) {
         const result = await updateGoal(goal.id, formData);
         if (result?.error) {
-          setErrors(result.error as Record<string, string[]>);
+          applyError(result.error);
         } else {
           router.push(`/goals/${goal.id}`);
           router.refresh();
@@ -75,10 +77,18 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
         router.refresh();
         return;
       }
-      setErrors({ title: ["An unexpected error occurred"] });
+      setFormError("Something went wrong saving your goal. Please try again.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function applyError(error: Record<string, string[]> | string) {
+    if (typeof error === "string") {
+      setFormError(error);
+      return;
+    }
+    setErrors(error);
   }
 
   return (
@@ -88,6 +98,11 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
       </CardHeader>
       <CardContent>
         <form action={handleSubmit} className="space-y-4">
+          {formError && (
+            <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {formError}
+            </p>
+          )}
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input
