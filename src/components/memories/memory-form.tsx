@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { createMemory, updateMemory } from "@/app/actions/memories";
 
 interface MemoryFormProps {
@@ -35,12 +36,23 @@ export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
     try {
       if (mode === "create") {
         const result = await createMemory(formData);
-        if (result?.error) setErrors(result.error as Record<string, string[]>);
+        if (result?.error) {
+          setErrors(result.error as Record<string, string[]>);
+        } else {
+          toast.success("Memory saved!", {
+            description: "This moment has been captured.",
+          });
+          router.push("/memories");
+          router.refresh();
+        }
       } else if (memory) {
         const result = await updateMemory(memory.id, formData);
         if (result?.error) {
           setErrors(result.error as Record<string, string[]>);
         } else {
+          toast.success("Memory updated!", {
+            description: "Your changes have been saved.",
+          });
           router.push(`/memories/${memory.id}`);
           router.refresh();
         }
@@ -51,6 +63,7 @@ export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
         return;
       }
       setErrors({ title: ["An unexpected error occurred"] });
+        toast.error("Failed to save memory");
     } finally {
       setLoading(false);
     }

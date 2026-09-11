@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { createGoal, updateGoal } from "@/app/actions/goals";
 
 const categories = [
@@ -63,12 +64,23 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
     try {
       if (mode === "create") {
         const result = await createGoal(formData);
-        if (result?.error) applyError(result.error);
+        if (result?.error) {
+          applyError(result.error);
+        } else {
+          toast.success("Goal created!", {
+            description: "Your new goal has been added.",
+          });
+          router.push("/goals");
+          router.refresh();
+        }
       } else if (goal) {
         const result = await updateGoal(goal.id, formData);
         if (result?.error) {
           applyError(result.error);
         } else {
+          toast.success("Goal updated!", {
+            description: "Your changes have been saved.",
+          });
           router.push(`/goals/${goal.id}`);
           router.refresh();
         }
@@ -79,6 +91,7 @@ export function GoalForm({ mode, goal }: GoalFormProps) {
         return;
       }
       setFormError("Something went wrong saving your goal. Please try again.");
+        toast.error("Failed to save goal");
     } finally {
       setLoading(false);
     }

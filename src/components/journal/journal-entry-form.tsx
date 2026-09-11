@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { upsertJournalEntry } from "@/app/actions/journal";
 
 interface JournalEntryFormProps {
@@ -99,6 +100,9 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
       if (result?.error) {
         setErrors(result.error as Record<string, string[]>);
       } else {
+        toast.success("Journal entry saved!", {
+          description: "Your reflection has been recorded.",
+        });
         router.push("/journal");
         router.refresh();
       }
@@ -108,6 +112,7 @@ export function JournalEntryForm({ date, entry }: JournalEntryFormProps) {
         return;
       }
       setErrors({ summary: ["An unexpected error occurred"] });
+        toast.error("Failed to save journal entry");
     } finally {
       setLoading(false);
     }

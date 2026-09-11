@@ -12,6 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { GoalForm } from "@/components/goals/goal-form";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import {
   updateGoalProgress,
   addMilestone,
@@ -72,6 +73,9 @@ export function GoalDetailClient({ goal }: { goal: Goal }) {
       progress: progressValue,
       status: progressValue === 100 ? "COMPLETED" : undefined,
     });
+    toast.success("Progress updated!", {
+      description: `Goal is now at ${progressValue}%.`,
+    });
     setLoading(false);
     router.refresh();
   }
@@ -80,26 +84,45 @@ export function GoalDetailClient({ goal }: { goal: Goal }) {
     e.preventDefault();
     if (!milestoneTitle.trim()) return;
     setLoading(true);
-    await addMilestone(goal.id, new FormData(e.currentTarget as HTMLFormElement));
-    setMilestoneTitle("");
-    setMilestoneDesc("");
-    setLoading(false);
-    router.refresh();
+    try {
+      await addMilestone(goal.id, new FormData(e.currentTarget as HTMLFormElement));
+      setMilestoneTitle("");
+      setMilestoneDesc("");
+      toast.success("Milestone added!", {
+        description: `"${milestoneTitle}" has been added to your goal.`,
+      });
+      router.refresh();
+    } catch {
+      toast.error("Failed to add milestone.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleToggleMilestone(milestoneId: string) {
     await toggleMilestone(milestoneId);
+    toast.success("Milestone updated!");
     router.refresh();
   }
 
   async function handleDeleteMilestone(milestoneId: string) {
-    await deleteMilestone(milestoneId);
-    router.refresh();
+    try {
+      await deleteMilestone(milestoneId);
+      toast.success("Milestone deleted.");
+      router.refresh();
+    } catch {
+      toast.error("Failed to delete milestone.");
+    }
   }
 
   async function handleDelete() {
     if (!confirm("Are you sure you want to delete this goal?")) return;
-    await deleteGoal(goal.id);
+    try {
+      await deleteGoal(goal.id);
+      toast.success("Goal deleted.");
+    } catch {
+      toast.error("Failed to delete goal.");
+    }
   }
 
   if (editing) {

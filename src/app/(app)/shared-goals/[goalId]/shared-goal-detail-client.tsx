@@ -11,6 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { SharedGoalForm } from "@/components/shared-goals/shared-goal-form";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import {
   updateSharedGoalProgress,
   addSharedMilestone,
@@ -63,6 +64,9 @@ export function SharedGoalDetailClient({ goal }: { goal: Goal }) {
     await updateSharedGoalProgress(goal.id, {
       progress: progressValue,
       status: progressValue === 100 ? "COMPLETED" : undefined,
+    });
+    toast.success("Progress updated!", {
+      description: `Shared goal is now at ${progressValue}%.`,
     });
     setLoading(false);
     router.refresh();
