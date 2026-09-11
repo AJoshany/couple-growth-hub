@@ -22,14 +22,14 @@ export function DatesListClient({ events }: { events: DateEvent[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">Dates</h1>
           <p className="text-muted-foreground">
             Plan and cherish your time together
           </p>
         </div>
-        <Link href="/dates/new">
+        <Link href="/dates/new" className="shrink-0 self-start sm:self-auto">
           <Button>
             <Plus className="size-4" />
             Plan Date
@@ -59,7 +59,7 @@ export function DatesListClient({ events }: { events: DateEvent[] }) {
                 {upcoming.map((event) => (
                   <Link key={event.id} href={`/dates/${event.id}`}>
                     <Card className="transition-colors hover:bg-muted/50">
-                      <CardContent className="flex items-center gap-4 p-4">
+                      <CardContent className="flex items-center gap-3 p-4 sm:gap-4">
                         <div className="flex size-12 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/10 text-center">
                           <span className="text-xs font-medium text-primary">
                             {new Date(event.date).toLocaleDateString("en-US", { weekday: "short" })}
@@ -83,9 +83,11 @@ export function DatesListClient({ events }: { events: DateEvent[] }) {
                             )}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0">
+                        <div className="flex shrink-0 items-center gap-2">
                           {event.type && (
-                            <Badge variant="outline">{event.type}</Badge>
+                            <Badge variant="outline" className="hidden sm:inline-flex">
+                              {event.type}
+                            </Badge>
                           )}
                           <Badge variant="secondary">
                             {Math.ceil(

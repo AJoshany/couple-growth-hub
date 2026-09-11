@@ -115,26 +115,28 @@ export function GoalDetailClient({ goal }: { goal: Goal }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Link href="/goals">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="size-4" />
-          </Button>
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold">{goal.title}</h1>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant="secondary" className={statusColors[goal.status] || ""}>
-              {goal.status.replace(/_/g, " ")}
-            </Badge>
-            <Badge variant="outline">{goal.category}</Badge>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-start gap-3">
+          <Link href="/goals" className="shrink-0">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="size-4" />
+            </Button>
+          </Link>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-bold break-words">{goal.title}</h1>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <Badge variant="secondary" className={statusColors[goal.status] || ""}>
+                {goal.status.replace(/_/g, " ")}
+              </Badge>
+              <Badge variant="outline">{goal.category}</Badge>
+            </div>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
           <Button variant="outline" onClick={() => setEditing(true)}>
             Edit
           </Button>
-          <Button variant="destructive" onClick={handleDelete}>
+          <Button variant="destructive" size="icon" onClick={handleDelete}>
             <Trash2 className="size-4" />
           </Button>
         </div>
@@ -177,7 +179,7 @@ export function GoalDetailClient({ goal }: { goal: Goal }) {
               {completedMilestones} of {totalMilestones} milestones completed
             </p>
           )}
-          <div className="flex gap-4 text-sm text-muted-foreground">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
             {goal.startDate && (
               <span>
                 Started: {new Date(goal.startDate).toLocaleDateString()}

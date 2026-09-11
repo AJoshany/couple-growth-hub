@@ -1,8 +1,9 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Heart, Users, LinkIcon, Clock } from "lucide-react";
 import Link from "next/link";
 import { AcceptInviteButton } from "./accept-button";
 
@@ -25,17 +26,23 @@ export default async function InvitePage({
 
   if (!invitation || invitation.status !== "PENDING") {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <Card className="w-full max-w-md text-center">
-          <CardHeader>
-            <CardTitle>Invalid Invitation</CardTitle>
-            <CardDescription>
-              This invitation link is invalid or has already been used.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      <div className="relative flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="brand-glow pointer-events-none absolute inset-x-0 top-0 h-72" />
+        <Card className="relative w-full max-w-md text-center">
+          <CardContent className="pt-8 space-y-4">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-muted">
+              <LinkIcon className="size-6 text-muted-foreground" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">Invalid Invitation</h1>
+              <p className="mt-2 text-muted-foreground">
+                This invitation link is invalid or has already been used.
+              </p>
+            </div>
             <Link href="/dashboard">
-              <Button>Go to Dashboard</Button>
+              <Button className="bg-brand-gradient border-0 text-white hover:opacity-90">
+                Go to Dashboard
+              </Button>
             </Link>
           </CardContent>
         </Card>
@@ -45,17 +52,23 @@ export default async function InvitePage({
 
   if (new Date() > invitation.expiresAt) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <Card className="w-full max-w-md text-center">
-          <CardHeader>
-            <CardTitle>Invitation Expired</CardTitle>
-            <CardDescription>
-              This invitation has expired. Ask your partner to generate a new one.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      <div className="relative flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="brand-glow pointer-events-none absolute inset-x-0 top-0 h-72" />
+        <Card className="relative w-full max-w-md text-center">
+          <CardContent className="pt-8 space-y-4">
+            <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-muted">
+              <Clock className="size-6 text-muted-foreground" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold">Invitation Expired</h1>
+              <p className="mt-2 text-muted-foreground">
+                This invitation has expired. Ask your partner to generate a new one.
+              </p>
+            </div>
             <Link href="/dashboard">
-              <Button>Go to Dashboard</Button>
+              <Button className="bg-brand-gradient border-0 text-white hover:opacity-90">
+                Go to Dashboard
+              </Button>
             </Link>
           </CardContent>
         </Card>
@@ -64,16 +77,27 @@ export default async function InvitePage({
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md text-center">
-        <CardHeader>
-          <CardTitle>Join Your Partner</CardTitle>
-          <CardDescription>
-            {invitation.sender?.name ?? "Someone"} has invited you to join their couple on
-            Couple Growth Hub.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="relative flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="brand-glow pointer-events-none absolute inset-x-0 top-0 h-72" />
+      <Card className="relative w-full max-w-md text-center">
+        <CardContent className="pt-8 space-y-6">
+          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+            <Users className="size-7 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Join Your Partner</h1>
+            <p className="mt-2 text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                {invitation.sender?.name ?? "Someone"}
+              </span>{' '}
+              has invited you to start your journey together on Couple Growth.
+            </p>
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <div className="bg-brand-gradient flex size-10 items-center justify-center rounded-full text-white shadow-sm">
+              <Heart className="size-5" fill="currentColor" />
+            </div>
+          </div>
           <AcceptInviteButton code={code} />
         </CardContent>
       </Card>
