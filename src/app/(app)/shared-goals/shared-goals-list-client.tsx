@@ -41,14 +41,14 @@ export function SharedGoalsListClient({ goals }: { goals: Goal[] }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">Shared Goals</h1>
           <p className="text-muted-foreground">
             Goals you&apos;re building together as a team
           </p>
         </div>
-        <Link href="/shared-goals/new">
+        <Link href="/shared-goals/new" className="shrink-0 self-start sm:self-auto">
           <Button>
             <Plus className="size-4" />
             New Shared Goal

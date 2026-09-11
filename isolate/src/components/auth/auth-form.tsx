@@ -157,7 +157,7 @@ export function AuthForm() {
         </div>
         <Button
           type="submit"
-          className="h-11 w-full text-base font-semibold bg-gradient-to-r from-rose-500 to-orange-400 hover:from-rose-600 hover:to-orange-500 text-white border-0"
+          className="bg-brand-gradient h-11 w-full border-0 text-base font-semibold text-white transition-opacity hover:opacity-90"
           disabled={loading || !csrfToken}
         >
           {loading
@@ -177,7 +177,7 @@ export function AuthForm() {
                 setMode("register");
                 setErrors({});
               }}
-              className="font-medium text-rose-600 hover:text-rose-500"
+              className="font-medium text-primary hover:opacity-80"
             >
               Sign up
             </button>
@@ -190,7 +190,7 @@ export function AuthForm() {
                 setMode("login");
                 setErrors({});
               }}
-              className="font-medium text-rose-600 hover:text-rose-500"
+              className="font-medium text-primary hover:opacity-80"
             >
               Sign in
             </button>
