@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { JournalList } from "@/components/journal/journal-list";
+import { MoodAnalytics } from "@/components/mood-analytics";
 
 export default async function JournalPage() {
   const session = await auth();
@@ -16,6 +17,16 @@ export default async function JournalPage() {
   });
 
   return (
-    <JournalList entries={entries} today={today} />
+    <div className="space-y-6">
+      <MoodAnalytics
+        entries={entries.map((e) => ({
+          date: e.date,
+          mood: e.mood,
+          energy: e.energy,
+          productivity: e.productivity,
+        }))}
+      />
+      <JournalList entries={entries} today={today} />
+    </div>
   );
 }

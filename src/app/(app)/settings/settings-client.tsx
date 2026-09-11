@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { NotificationSettings } from "@/components/notification-settings";
+import { ExportSettings } from "@/components/export-settings";
 import { toast } from "sonner";
 import { generateInvitation } from "@/app/actions/couple";
 import { updateRelationshipInfo } from "@/app/actions/relationship";
@@ -226,6 +228,12 @@ export function SettingsClient({
           )}
         </CardContent>
       </Card>
+
+      {/* Notifications */}
+      <NotificationSettings />
+
+      {/* Export */}
+      <ExportSettings />
 
       {/* Account */}
       <Card>

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { FileUpload } from "@/components/ui/file-upload";
 import { toast } from "sonner";
 import { createMemory, updateMemory } from "@/app/actions/memories";
 
@@ -21,12 +22,14 @@ interface MemoryFormProps {
     location: string | null;
     date: Date;
     dateEventId: string | null;
+    imageUrl?: string | null;
   };
 }
 
 export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [imageUrl, setImageUrl] = useState<string | null>(memory?.imageUrl || null);
   const router = useRouter();
 
   async function handleSubmit(formData: FormData) {
@@ -143,6 +146,14 @@ export function MemoryForm({ mode, dateEvents, memory }: MemoryFormProps) {
               placeholder="What made this moment special?"
               defaultValue={memory?.description ?? ""}
               rows={4}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Photo (optional)</Label>
+            <FileUpload
+              value={imageUrl || undefined}
+              onChange={setImageUrl}
             />
           </div>
 

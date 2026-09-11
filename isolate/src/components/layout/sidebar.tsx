@@ -16,6 +16,10 @@ import {
   Clock,
   Settings,
   LogOut,
+  MessageCircleHeart,
+  CheckCircle,
+  Award,
+  Library,
 } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 
@@ -25,6 +29,7 @@ const navSections = [
     items: [
       { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { href: "/partner", label: "Partner", icon: Users },
+      { href: "/achievements", label: "Achievements", icon: Award },
     ],
   },
   {
@@ -32,6 +37,7 @@ const navSections = [
     items: [
       { href: "/goals", label: "My Goals", icon: Target },
       { href: "/shared-goals", label: "Shared Goals", icon: Trophy },
+      { href: "/habits", label: "Habits", icon: CheckCircle },
       { href: "/journal", label: "Journal", icon: BookOpen },
       { href: "/weekly", label: "Weekly Review", icon: BarChart3 },
     ],
@@ -40,6 +46,9 @@ const navSections = [
     label: "Together",
     items: [
       { href: "/relationship", label: "Relationship", icon: Heart },
+      { href: "/love-notes", label: "Love Notes", icon: MessageCircleHeart },
+      { href: "/reading", label: "Reading List", icon: Library },
+      { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/dates", label: "Dates", icon: Calendar },
       { href: "/memories", label: "Memories", icon: Sparkles },
       { href: "/timeline", label: "Timeline", icon: Clock },

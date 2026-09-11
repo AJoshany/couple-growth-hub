@@ -8,6 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { NotificationSettings } from "@/components/notification-settings";
+import { ExportSettings } from "@/components/export-settings";
+import { toast } from "sonner";
 import { generateInvitation } from "@/app/actions/couple";
 import { updateRelationshipInfo } from "@/app/actions/relationship";
 import { logout } from "@/app/actions/auth";
@@ -53,32 +57,50 @@ export function SettingsClient({
 
   async function handleGenerateInvite() {
     setLoading(true);
-    const result = await generateInvitation();
-    if (result && "code" in result && result.code) {
-      setInviteCode(result.code);
+    try {
+      const result = await generateInvitation();
+      if (result && "code" in result && result.code) {
+        setInviteCode(result.code);
+        toast.success("Invitation link generated!", {
+          description: "Share this link with your partner.",
+        });
+      } else {
+        toast.error("Failed to generate invitation");
+      }
+    } catch {
+      toast.error("Something went wrong generating the invitation.");
+    } finally {
+      setLoading(false);
+      router.refresh();
     }
-    setLoading(false);
-    router.refresh();
   }
 
   function handleCopyInvite() {
     const url = `${window.location.origin}/auth/invite/${inviteCode}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
+    toast.success("Link copied!", {
+      description: "Invitation URL copied to clipboard.",
+    });
     setTimeout(() => setCopied(false), 2000);
   }
 
   async function handleSaveCouple() {
     setLoading(true);
-    const formData = new FormData();
-    formData.set("name", coupleName);
-    formData.set("startDate", startDate);
-    await updateRelationshipInfo({
-      name: coupleName || undefined,
-      startDate: startDate || undefined,
-    });
-    setLoading(false);
-    router.refresh();
+    try {
+      await updateRelationshipInfo({
+        name: coupleName || undefined,
+        startDate: startDate || undefined,
+      });
+      toast.success("Couple info saved!", {
+        description: "Your changes have been updated.",
+      });
+      router.refresh();
+    } catch {
+      toast.error("Failed to save couple info.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -151,7 +173,13 @@ export function SettingsClient({
                 </div>
               </div>
               <Button size="sm" onClick={handleSaveCouple} disabled={loading}>
-                Save Couple Info
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <LoadingSpinner size="xs" /> Saving…
+                  </span>
+                ) : (
+                  "Save Couple Info"
+                )}
               </Button>
 
               <Separator />
@@ -171,7 +199,11 @@ export function SettingsClient({
                     onClick={handleGenerateInvite}
                     disabled={loading}
                   >
-                    <Link className="size-4" />
+                    {loading ? (
+                      <LoadingSpinner size="xs" />
+                    ) : (
+                      <Link className="size-4" />
+                    )}
                     {inviteCode ? "Regenerate" : "Generate Link"}
                   </Button>
                 </div>
@@ -196,6 +228,12 @@ export function SettingsClient({
           )}
         </CardContent>
       </Card>
+
+      {/* Notifications */}
+      <NotificationSettings />
+
+      {/* Export */}
+      <ExportSettings />
 
       {/* Account */}
       <Card>

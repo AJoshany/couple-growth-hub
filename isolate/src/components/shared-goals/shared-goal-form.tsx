@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { createSharedGoal, updateSharedGoal } from "@/app/actions/shared-goals";
 
 const categories = [
@@ -55,12 +56,23 @@ export function SharedGoalForm({ mode, goal }: SharedGoalFormProps) {
     try {
       if (mode === "create") {
         const result = await createSharedGoal(formData);
-        if (result?.error) setErrors(result.error as Record<string, string[]>);
+        if (result?.error) {
+          setErrors(result.error as Record<string, string[]>);
+        } else {
+          toast.success("Shared goal created!", {
+            description: "Your goal together has been added.",
+          });
+          router.push("/shared-goals");
+          router.refresh();
+        }
       } else if (goal) {
         const result = await updateSharedGoal(goal.id, formData);
         if (result?.error) {
           setErrors(result.error as Record<string, string[]>);
         } else {
+          toast.success("Shared goal updated!", {
+            description: "Your changes have been saved.",
+          });
           router.push(`/shared-goals/${goal.id}`);
           router.refresh();
         }
@@ -71,6 +83,7 @@ export function SharedGoalForm({ mode, goal }: SharedGoalFormProps) {
         return;
       }
       setErrors({ title: ["An unexpected error occurred"] });
+        toast.error("Failed to save shared goal");
     } finally {
       setLoading(false);
     }

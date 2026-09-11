@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { AnniversaryReminders } from "@/components/anniversary-reminders";
 import { toast } from "sonner";
 import { getRelationshipInfo, updateRelationshipInfo } from "@/app/actions/relationship";
 import { logMissingEntry, getMissingStatus } from "@/app/actions/missing";
@@ -308,6 +309,13 @@ export function RelationshipPageClient() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Anniversary Reminders */}
+      <AnniversaryReminders
+        startDate={info?.couple?.startDate || null}
+        firstDate={info?.lastDate?.date || null}
+        firstMemory={null}
+      />
 
       {/* Quick Links */}
       <div className="grid gap-3 sm:grid-cols-2">

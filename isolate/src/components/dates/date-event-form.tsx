@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { toast } from "sonner";
 import { createDateEvent, updateDateEvent } from "@/app/actions/dates";
 
 const dateTypes = [
@@ -47,12 +48,23 @@ export function DateEventForm({ mode, event }: DateEventFormProps) {
     try {
       if (mode === "create") {
         const result = await createDateEvent(formData);
-        if (result?.error) setErrors(result.error as Record<string, string[]>);
+        if (result?.error) {
+          setErrors(result.error as Record<string, string[]>);
+        } else {
+          toast.success("Date planned!", {
+            description: "Your date has been added to the calendar.",
+          });
+          router.push("/dates");
+          router.refresh();
+        }
       } else if (event) {
         const result = await updateDateEvent(event.id, formData);
         if (result?.error) {
           setErrors(result.error as Record<string, string[]>);
         } else {
+          toast.success("Date updated!", {
+            description: "Your changes have been saved.",
+          });
           router.push(`/dates/${event.id}`);
           router.refresh();
         }
@@ -63,6 +75,7 @@ export function DateEventForm({ mode, event }: DateEventFormProps) {
         return;
       }
       setErrors({ title: ["An unexpected error occurred"] });
+        toast.error("Failed to save date");
     } finally {
       setLoading(false);
     }
