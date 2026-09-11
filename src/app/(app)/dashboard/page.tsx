@@ -279,9 +279,9 @@ export default async function DashboardPage() {
 
       {/* Main grid */}
       <section className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+        <div className="flex flex-col gap-6 lg:col-span-2">
           {/* My goals */}
-          <Card className="p-5 sm:p-6">
+          <Card className="flex-1 p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <h3 className="text-sm font-semibold">Your goals</h3>
@@ -327,7 +327,7 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Shared goals */}
-          <Card className="p-5 sm:p-6">
+          <Card className="flex-1 p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <h3 className="text-sm font-semibold">Shared goals</h3>
@@ -373,7 +373,7 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Recent activity */}
-          <Card className="p-5 sm:p-6">
+          <Card className="flex-1 p-5 sm:p-6">
             <div className="flex items-center justify-between gap-4">
               <h3 className="text-sm font-semibold">Recent activity</h3>
               <Link
@@ -417,9 +417,9 @@ export default async function DashboardPage() {
         </div>
 
         {/* Right column */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           {/* Today's check-in */}
-          <Card className="p-5 sm:p-6">
+          <Card className="flex-1 p-5 sm:p-6">
             <h3 className="text-sm font-semibold">Today</h3>
             {todayJournal ? (
               <div className="mt-4 space-y-4">
@@ -473,7 +473,7 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Missing each other */}
-          <Card className="p-5 sm:p-6">
+          <Card className="flex-1 p-5 sm:p-6">
             <div className="flex items-center gap-2">
               <Heart className="size-4 text-primary" fill="currentColor" />
               <h3 className="text-sm font-semibold">Missing each other</h3>
@@ -493,7 +493,7 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Next date */}
-          <Card className="p-5 sm:p-6">
+          <Card className="flex-1 p-5 sm:p-6">
             <div className="flex items-center gap-2">
               <Calendar className="size-4 text-primary" />
               <h3 className="text-sm font-semibold">
