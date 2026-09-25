@@ -33,6 +33,12 @@ export async function createGoal(formData: FormData) {
     return { error: parsed.error.flatten().fieldErrors };
   }
 
+  // Templates ship ready-made milestones; they arrive as repeated form fields.
+  const milestoneTitles = formData
+    .getAll("milestones")
+    .map((value) => String(value).trim())
+    .filter((title) => title.length > 0 && title.length <= 100);
+
   const goal = await prisma.goal.create({
     data: {
       userId,
@@ -41,6 +47,18 @@ export async function createGoal(formData: FormData) {
       category: parsed.data.category,
       startDate: parsed.data.startDate ? new Date(parsed.data.startDate) : new Date(),
       targetDate: parsed.data.targetDate ? new Date(parsed.data.targetDate) : undefined,
+      // Offset the timestamps by 1ms so the template order stays stable when
+      // milestones are read back sorted by createdAt.
+      ...(milestoneTitles.length > 0
+        ? {
+            milestones: {
+              create: milestoneTitles.map((title, index) => ({
+                title,
+                createdAt: new Date(Date.now() + index),
+              })),
+            },
+          }
+        : {}),
     },
   });
 
