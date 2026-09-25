@@ -18,6 +18,7 @@ import { LoadingSpinner } from "@/components/ui/loading";
 import { toast } from "sonner";
 import { createGoal, updateGoal } from "@/app/actions/goals";
 import { GoalTemplate } from "@/lib/goal-templates";
+import { Check } from "lucide-react";
 
 const categories = [
   { value: "CAREER", label: "Career" },
@@ -119,10 +120,36 @@ export function GoalForm({ mode, goal, template }: GoalFormProps) {
               {formError}
             </p>
           )}
-          {template && (
-            <div className="rounded-lg bg-primary/5 p-3">
+          {template && mode === "create" && (
+            <div className="space-y-2 rounded-lg bg-primary/5 p-3">
               <p className="text-sm font-medium">Using template: {template.icon} {template.title}</p>
               <p className="text-xs text-muted-foreground">{template.description}</p>
+              {template.milestones.length > 0 && (
+                <>
+                  <p className="text-xs font-medium">
+                    {template.milestones.length} milestones will be added automatically
+                  </p>
+                  <ul className="space-y-0.5">
+                    {template.milestones.map((milestone, i) => (
+                      <li
+                        key={i}
+                        className="flex items-center gap-1 text-xs text-muted-foreground"
+                      >
+                        <Check className="size-3 shrink-0" />
+                        {milestone}
+                      </li>
+                    ))}
+                  </ul>
+                  {template.milestones.map((milestone, i) => (
+                    <input
+                      key={i}
+                      type="hidden"
+                      name="milestones"
+                      value={milestone}
+                    />
+                  ))}
+                </>
+              )}
             </div>
           )}
 
